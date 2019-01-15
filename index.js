@@ -35,7 +35,9 @@ app.post('/', function (req, res) {
         // var artist = await page.$eval("li.list-group-item a#navi", el => el.innerHTML);
         // var songName = await page.$eval("li.list-group-item a#navi:last-child", el => el.innerHTML);
 
-        var songUrl = await page.$("#query");
+        var inputField = await page.$("#query")
+        await page.type(inputField, req.body.input);
+
 
         console.log("song url found");
     
