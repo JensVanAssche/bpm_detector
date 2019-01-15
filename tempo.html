@@ -17,6 +17,17 @@
             align-items: center;
             height: 100vh;
         }
+        .header {
+            position: absolute;
+            top: 0;
+        }
+        .header h1 {
+            font-family: Roboto;
+            letter-spacing: 5px;
+            font-weight: bold;
+            font-size: 5em;
+            margin-bottom: 150px;
+        }
         .loading {
             display: flex;
             flex-direction: column;
@@ -83,6 +94,9 @@
     </head>
     <body>
         <main>
+            <div class="header">
+                <h1>BPM DETECTOR</h1>
+            </div>
             <div class="loading">
                 <span class="text">Calculating tempo...</span>
                 <div class="lds-dual-ring"></div>
