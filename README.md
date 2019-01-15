@@ -17,8 +17,10 @@ Na: \
 6. Na het normaliseren zet je een threshold op je waveform, dit is een volume level die we gaan gebruiken om de hoogste pieken te isoleren en te tellen.
 7. Dit gaan we dus doen, vervolgens tel je het aantal pieken die boven de threshold uitsteken en hiermee kan je een tempo berekenen.
 
-#### Stap 2: liedje binnenhalen via webscraping
-Ik heb besloten om de gebruiker een liedje naar keuze te laten invoeren. Deze input wordt gewebscraped van een site die mp3 files host. Deze mp3 kan dan met een GET request worden binnengehaald in de webapp en kan gebruikt worden voor de rest van het proces. \
+#### Stap 2: nodejs en webscraping
+Ik heb besloten om de gebruiker een liedje naar keuze te laten invoeren. Met deze user input ga ik een website scrapen die mp3 files host. Vervolgens haal ik de mp3 en nog data dat ik wil binnen met een request in de webapp. Deze data kan dan gebruikt worden voor de rest van het proces. \
+De app gaat dus uit 2 delen bestaan, het webscraping gedeelte en het beat detectie gedeelte. Het webscraping gedeelte ga ik uitvoeren door middel van een nodeJS server met expressJS. Dit doe ik omdat webscrapen vanuit je browser nogal moeilijk is (uit eigen ervaring). Ik ga hier Puppeteer voor gebruiken, een nieuwe node library die snel en gemakkelijk een headless chrome browser kan besturen. \
+Het beat detectie algoritme zal ik dan uitvoeren in browser/client-side.
 
 #### Stap 3: de lowpass filter
 
@@ -44,3 +46,6 @@ Ik heb besloten om de gebruiker een liedje naar keuze te laten invoeren. Deze in
 [6. Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) \
 [7. Implement Tempo Detection](https://askmacgyver.com/blog/tutorial/how-to-implement-tempo-detection-in-your-application) \
 [8. Beat Detection Algorithms](http://mziccard.me/2015/05/28/beats-detection-algorithms-1/) \
+[9. ExpressJS Docs](https://expressjs.com/) \
+[10. Puppeteer Git](https://github.com/GoogleChrome/puppeteer) \
+[11. Puppeteer Docs](https://github.com/GoogleChrome/puppeteer/blob/v1.11.0/docs/api.md) \
