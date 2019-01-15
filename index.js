@@ -1,7 +1,6 @@
 var express = require('express');
 var puppeteer = require('puppeteer');
 var bodyParser = require('body-parser');
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 var app = express();
 
@@ -21,7 +20,8 @@ app.post('/', function (req, res) {
     
     (async () => {
         const browser = await puppeteer.launch({
-            headless: true
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
         const page = await browser.newPage();
         await page.goto('https://my-free-mp3s.com/en');
