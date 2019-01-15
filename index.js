@@ -24,8 +24,6 @@ app.post('/', function (req, res) {
         });
         const page = await browser.newPage();
         await page.goto('https://my-free-mp3s.com/en');
-        console.log("site accessed");
-        await page.waitForSelector("#query", {timeout: 30000});
         await page.type("#query", req.body.input);
         await page.waitFor(100);
         await page.click("button.search");
