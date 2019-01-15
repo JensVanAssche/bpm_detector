@@ -24,22 +24,24 @@ app.post('/', function (req, res) {
         });
         const page = await browser.newPage();
         await page.goto('https://my-free-mp3s.com/en');
-        await page.type("input", req.body.input);
-        await page.waitFor(100);
-        await page.click("button.search");
-        await page.waitFor(3000);
-        await page.click("li.list-group-item:first-child span.play");
-        await page.waitFor(100);
-        await page.click("li.list-group-item:first-child span.play");
-        var songUrl = await page.$eval("div.jp-jplayer audio", el => el.src);
-        var artist = await page.$eval("li.list-group-item a#navi", el => el.innerHTML);
-        var songName = await page.$eval("li.list-group-item a#navi:last-child", el => el.innerHTML);
+        // await page.type("#query", req.body.input);
+        // await page.waitFor(100);
+        // await page.click("button.search");
+        // await page.waitFor(3000);
+        // await page.click("li.list-group-item:first-child span.play");
+        // await page.waitFor(100);
+        // await page.click("li.list-group-item:first-child span.play");
+        // var songUrl = await page.$eval("div.jp-jplayer audio", el => el.src);
+        // var artist = await page.$eval("li.list-group-item a#navi", el => el.innerHTML);
+        // var songName = await page.$eval("li.list-group-item a#navi:last-child", el => el.innerHTML);
+
+        var songUrl = await page.$("#query");
 
         console.log("song url found");
     
         await browser.close();
 
-        res.render(__dirname+'/tempo.html', {songUrl:songUrl, artist:artist, songName:songName});
+        res.render(__dirname+'/tempo.html', {songUrl:songUrl});
     })();
 });
 
