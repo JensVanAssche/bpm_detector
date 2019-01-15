@@ -45,7 +45,7 @@ Dit algoritme dat ik heb geschreven werkt, maar is verschrikkelijk inaccuraat. I
 
 #### Stap 10: de webscraper
 Ik heb nu een algoritme geschreven dat bij benadering het juiste tempo van de meeste liedjes weet te berekenen. Dit is weliswaar één deel van de volledige applicatie die ik wil bouwen. De volgende stap, de webscraper maken, gaan waarschijnlijk gemakkelijker zijn sinds ik al veel over webscraping heb bijgeleerd via mijn "new technology" onderwerp in de vorige periode. \
-De gebruiker gaat dus een artiest en naam van een liedje kunnen ingeven, deze data wordt doorgegeven aan een site die mp3 files host. De url van de mp3 file wordt gescraped van de site en teruggestuurd naar de gebruiker waar het algoritme de rest van het werk doet. \
+De gebruiker gaat dus een artiest en naam van een liedje kunnen ingeven, deze data wordt doorgegeven aan een site die mp3 files host. De url van de mp3 file wordt gescraped van de site en teruggestuurd naar de gebruiker waar het algoritme de rest van het werk doet.
 
 Ik ga deze scraper maken met Puppeteer en hosten op een nodeJS server met expressJS. Ik heb Selenium in het verleden gebruikt met python voor webscraping maar ik ga nu javascript gebruiken, dus Selenium is niet meer de beste optie. Puppeteer is een nieuwe node library ontwikkeld door Google voor o.a. webscraping. Dit is perfect voor mijn javascript applicatie. Webscrapen met Puppeteer is niet veel anders dan met Selenium, dus ik bespaar je hier de details. Ik ga basically via de scraper naar de site, zoek op de input van de gebruiker, klik het eerste resultaat dat opkomt, kopieër de mp3 bron url en stuur deze terug.
 
