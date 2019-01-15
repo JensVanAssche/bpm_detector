@@ -19,9 +19,7 @@ app.post('/', function (req, res) {
     console.log(req.body.input);
     
     (async () => {
-        const browser = await puppeteer.launch({
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+        const browser = await puppeteer.launch();
         const page = await browser.newPage();
         await page.goto('https://my-free-mp3s.com/en');
         page.type("#query", req.body.input);
