@@ -1,0 +1,108 @@
+body { margin: 0; }
+main {
+    background-color: #1b3a6b;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.header {
+    position: absolute;
+    top: 0;
+}
+.header h1 {
+    font-family: Roboto;
+    letter-spacing: 5px;
+    font-weight: bold;
+    font-size: 5em;
+    margin-bottom: 150px;
+}
+.loading {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+span.text {
+    font-family: Roboto;
+    font-weight: bold;
+    font-size: 5em;
+}
+input {
+    width: 60vw;
+    padding: 20px;
+    font-size: 3em;
+    font-family: Roboto;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    border-bottom: 5px solid #fff;
+    color: #fff;
+}
+input:focus {
+    outline: none;
+}
+input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+button {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    color: #fff;
+    font-size: 4em;
+    cursor: pointer;
+    transition: 0.2s;
+}
+button:hover {
+    transform: translateX(20px);
+    transition: 0.2s;
+}
+.lds-dual-ring {
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+    margin-top: 50px;
+}
+.lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 46px;
+    height: 46px;
+    margin: 1px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    border-color: #fff transparent #fff transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.tempo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+a {
+    font-size: 2em;
+    font-family: Roboto;
+    color: #fff;
+    text-decoration: none;
+    margin-top: 50px;
+}
+a:hover {
+    text-decoration: underline;
+}
+.credits {
+    font-size: 2em;
+    font-family: Roboto;
+    color: #fff;
+    margin-bottom: 25px;
+}
+.bpm {
+    font-family: Roboto;
+    font-weight: bold;
+    font-size: 8em;
+}
