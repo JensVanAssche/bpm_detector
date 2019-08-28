@@ -39,7 +39,19 @@ app.post("/", function(req, res) {
       console.log("query entered");
       await page.waitForSelector("button.search");
       await page.click("button.search");
-      await page.waitForSelector("li.list-group-item");
+      console.log("search started");
+
+      try {
+        await page.waitForSelector("li.list-group-item:first-child span.play");
+      } catch (error) {
+        res.render(__dirname + "/index.html", {
+          error: "error"
+        });
+        browser.close();
+      }
+
+      console.log("song found");
+
       await page.click("li.list-group-item:first-child span.play");
       await page.click("li.list-group-item:first-child span.play");
       var songUrl = await page.$eval("div.jp-jplayer audio", el => el.src);
@@ -52,8 +64,7 @@ app.post("/", function(req, res) {
         el => el.innerHTML
       );
 
-      console.log("song url found");
-
+      console.log("song data found");
       await browser.close();
 
       res.render(__dirname + "/tempo.html", {
