@@ -29,12 +29,14 @@ app.post("/", function(req, res) {
 
     (async () => {
       const browser = await puppeteer.launch({
-        args: ["--no-sandbox"]
+        args: ["--no-sandbox", "--disable-setuid-sandbox"]
       });
       const page = await browser.newPage();
       await page.goto("https://my-free-mp3s.com/");
-      await page.waitForSelector("#query");
+      console.log("on page");
+      //   await page.waitForSelector("#query");
       await page.type("#query", req.body.input);
+      console.log("query entered");
       await page.waitForSelector("button.search");
       await page.click("button.search");
       await page.waitForSelector("li.list-group-item");
