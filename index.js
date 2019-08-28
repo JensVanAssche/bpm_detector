@@ -34,7 +34,7 @@ app.post("/", function(req, res) {
       const page = await browser.newPage();
       await page.goto("https://my-free-mp3s.com/");
       console.log("on page");
-      //   await page.waitForSelector("#query");
+      await page.waitForSelector("#query");
       await page.type("#query", req.body.input);
       console.log("query entered");
       await page.waitForSelector("button.search");
