@@ -29,7 +29,7 @@ app.post("/", function(req, res) {
 
     (async () => {
       const browser = await puppeteer.launch({
-        args: ["--no-sandbox"]
+        headless: true
       });
       const page = await browser.newPage();
       await page.goto("https://my-free-mp3s.com/");
