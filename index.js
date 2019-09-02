@@ -1,6 +1,7 @@
 var express = require("express");
 var puppeteer = require("puppeteer");
 var bodyParser = require("body-parser");
+var serverless = require("serverless-http");
 var app = express();
 
 app.use(
@@ -29,12 +30,7 @@ app.post("/", function(req, res) {
 
     (async () => {
       const browser = await puppeteer.launch({
-        args: [
-          "--no-sandbox",
-          "--disable-setuid-sandbox",
-          "--disable-dev-shm-usage",
-          "--single-process"
-        ]
+        args: ["--no-sandbox", "--disable-setuid-sandbox"]
       });
       const page = await browser.newPage();
       await page.goto("https://my-free-mp3s.com/");
@@ -80,6 +76,8 @@ app.post("/", function(req, res) {
     })();
   }
 });
+
+module.exports.handler = serverless(app);
 
 app.listen(process.env.PORT || 5000);
 
