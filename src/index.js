@@ -15,8 +15,8 @@ app.engine("html", require("ejs").renderFile);
 app.set("view engine", "html");
 // app.use(express.static(__dirname + "/"));
 
-router.get("/", (req, res) => {
-  res.render("../index.html");
+router.get("/", (_req, res) => {
+  res.render("../../../index.html");
 });
 
 router.post("/", function(req, res) {
