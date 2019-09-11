@@ -23,7 +23,7 @@ router.post("/", function(req, res) {
   // check for user input
   if (req.body.input == "") {
     console.log("error: no user input");
-    res.render(__dirname + "/index.html");
+    res.render("../index.html");
     res.end();
   } else {
     console.log("searching song...");
