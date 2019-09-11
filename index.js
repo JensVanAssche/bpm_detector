@@ -38,11 +38,12 @@ app.post("/", function(req, res) {
       console.log("body found");
       await page.waitForSelector(".wrapper");
       console.log("wrapper found");
-      await page.waitForSelector("input.form-control");
+      await page.waitForSelector("input");
       console.log("input found");
-      await page.type("input.form-control", req.body.input);
+      await page.type("input", req.body.input);
       console.log("query entered");
       await page.waitForSelector("button.search");
+      console.log("button found");
       await page.click("button.search");
       console.log("search started");
 
