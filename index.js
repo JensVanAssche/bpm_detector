@@ -1,7 +1,6 @@
 var express = require("express");
 var puppeteer = require("puppeteer");
 var bodyParser = require("body-parser");
-var serverless = require("serverless-http");
 var app = express();
 
 app.use(
@@ -35,7 +34,12 @@ app.post("/", function(req, res) {
       const page = await browser.newPage();
       await page.goto("https://my-free-mp3s.com/");
       console.log("on page");
+      await page.waitForSelector("body");
+      console.log("body found");
+      await page.waitForSelector(".wrapper");
+      console.log("wrapper found");
       await page.waitForSelector("input.form-control");
+      console.log("input found");
       await page.type("input.form-control", req.body.input);
       console.log("query entered");
       await page.waitForSelector("button.search");
@@ -76,8 +80,6 @@ app.post("/", function(req, res) {
     })();
   }
 });
-
-module.exports.handler = serverless(app);
 
 app.listen(process.env.PORT || 5000);
 
