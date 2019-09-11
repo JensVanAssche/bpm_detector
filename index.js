@@ -38,6 +38,12 @@ app.post("/", function(req, res) {
       console.log("body found");
       await page.waitForSelector(".wrapper");
       console.log("wrapper found");
+      await page.waitForSelector(".container");
+      console.log("container found");
+      await page.waitForSelector(".col-xs-12");
+      console.log("col found");
+      await page.waitForSelector(".input-group");
+      console.log("group found");
       await page.waitForSelector("input");
       console.log("input found");
       await page.type("input", req.body.input);
