@@ -11,12 +11,14 @@ app.use(
   })
 );
 app.use(bodyParser.json());
+
+app.use(express.static(path.join(__dirname, "public")));
+app.set("views", path.join(__dirname, "views"));
 app.engine("html", require("ejs").renderFile);
 app.set("view engine", "html");
-// app.use(express.static(__dirname + "/"));
 
 router.get("/", (_req, res) => {
-  res.render("../../../../index.html");
+  res.render("index.html");
 });
 
 router.post("/", function(req, res) {
