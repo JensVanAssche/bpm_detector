@@ -2,6 +2,7 @@ const express = require("express");
 const serverless = require("serverless-http");
 const puppeteer = require("puppeteer");
 const bodyParser = require("body-parser");
+const path = require("path");
 const app = express();
 const router = express.Router();
 
