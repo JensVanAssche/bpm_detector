@@ -11,7 +11,7 @@
       integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="style.css" /> -->
 
     <title>BPM Detector</title>
 
@@ -22,11 +22,8 @@
       <div class="header">
         <h1>BPM DETECTOR</h1>
       </div>
-      <div class="error">
-        <p>Sorry, song not found. Try again.</p>
-      </div>
       <div class="inputform">
-        <form action="/" method="post">
+        <form action="/.netlify/functions/index" method="post">
           <input type="text" name="input" placeholder="typ artiest en nummer" />
           <button type="submit"><i class="fas fa-arrow-right"></i></button>
         </form>
@@ -38,20 +35,12 @@
     </main>
 
     <script>
-      var error = "<%= error %>";
-
       $(".loading").hide();
-      $(".error").hide();
 
       $("button").click(function() {
         $("form").hide();
-        $(".error").hide();
         $(".loading").show();
       });
-
-      if (error === "error") {
-        $(".error").show();
-      }
     </script>
   </body>
 </html>

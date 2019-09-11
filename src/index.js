@@ -1,7 +1,9 @@
-var express = require("express");
-var puppeteer = require("puppeteer");
-var bodyParser = require("body-parser");
-var app = express();
+const express = require("express");
+const serverless = require("serverless-http");
+const puppeteer = require("puppeteer");
+const bodyParser = require("body-parser");
+const app = express();
+const router = express.Router();
 
 app.use(
   bodyParser.urlencoded({
@@ -11,13 +13,13 @@ app.use(
 app.use(bodyParser.json());
 app.engine("html", require("ejs").renderFile);
 app.set("view engine", "html");
-app.use(express.static(__dirname + "/"));
+// app.use(express.static(__dirname + "/"));
 
-app.get("/", function(req, res) {
-  res.render(__dirname + "/index.html");
+router.get("/", (req, res) => {
+  res.render("../index.html");
 });
 
-app.post("/", function(req, res) {
+router.post("/", function(req, res) {
   // check for user input
   if (req.body.input == "") {
     console.log("error: no user input");
@@ -29,27 +31,17 @@ app.post("/", function(req, res) {
 
     (async () => {
       const browser = await puppeteer.launch({
+        executablePath:
+          "./node_modules/puppeteer/.local-chromium/win64-609904/chrome-win/chrome.exe",
+        headless: true,
         args: ["--no-sandbox", "--disable-setuid-sandbox"]
       });
       const page = await browser.newPage();
       await page.goto("https://my-free-mp3s.com/");
       console.log("on page");
-      await page.waitForSelector("body");
-      console.log("body found");
-      await page.waitForSelector(".wrapper");
-      console.log("wrapper found");
-      await page.waitForSelector(".container");
-      console.log("container found");
-      await page.waitForSelector(".col-xs-12");
-      console.log("col found");
-      await page.waitForSelector(".input-group");
-      console.log("group found");
-      await page.waitForSelector("input");
-      console.log("input found");
       await page.type("input", req.body.input);
       console.log("query entered");
       await page.waitForSelector("button.search");
-      console.log("button found");
       await page.click("button.search");
       console.log("search started");
 
@@ -79,7 +71,7 @@ app.post("/", function(req, res) {
       console.log("song data found");
       await browser.close();
 
-      res.render(__dirname + "/tempo.html", {
+      res.render("../tempo.html", {
         songUrl: songUrl,
         artist: artist,
         songName: songName
@@ -88,10 +80,14 @@ app.post("/", function(req, res) {
   }
 });
 
-app.listen(process.env.PORT || 5000);
+app.use("/.netlify/functions/index", router);
 
-if (process.env.PORT == undefined) {
-  console.log("server running on http://localhost:5000");
-} else {
-  console.log("server running on port " + process.env.PORT);
-}
+module.exports.handler = serverless(app);
+
+// app.listen(process.env.PORT || 5000);
+
+// if (process.env.PORT == undefined) {
+//   console.log("server running on http://localhost:5000");
+// } else {
+//   console.log("server running on port " + process.env.PORT);
+// }

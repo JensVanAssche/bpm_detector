@@ -1,200 +1,215 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width" />
 
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="style.css">
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+      crossorigin="anonymous"
+    />
+    <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
 
-        <title>BPM Detector</title>
+    <title>BPM Detector</title>
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    </head>
-    <body>
-        <main>
-            <div class="header">
-                <h1>BPM DETECTOR</h1>
-            </div>
-            <div class="loading">
-                <span class="text">Calculating tempo...</span>
-                <div class="lds-dual-ring"></div>
-            </div>
-            <div class="tempo">
-                <div class="credits">
-                    <span class="artist"></span> - 
-                    <span class="song"></span>
-                </div>
-                <span class="bpm"></span>
-                <a href="/">Go again!</a>
-            </div>
-        </main>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <main>
+      <div class="header">
+        <h1>BPM DETECTOR</h1>
+      </div>
+      <div class="loading">
+        <span class="text">Calculating tempo...</span>
+        <div class="lds-dual-ring"></div>
+      </div>
+      <div class="tempo">
+        <div class="credits">
+          <span class="artist"></span> -
+          <span class="song"></span>
+        </div>
+        <span class="bpm"></span>
+        <a href="/.netlify/functions/index">Go again!</a>
+      </div>
+    </main>
 
-        <script>
-            $(".tempo").hide();
+    <script>
+      $(".tempo").hide();
 
-            var songUrl = "<%= songUrl %>";
-            var artist = "<%= artist %>";
-            var songName = "<%= songName %>";
-            
+      var songUrl = "<%= songUrl %>";
+      var artist = "<%= artist %>";
+      var songName = "<%= songName %>";
 
-            var frenquencyCutoff = 130;
-            var clipStart = 20;
-            var thresholdMultiplier = 0.18;
+      var frenquencyCutoff = 130;
+      var clipStart = 20;
+      var thresholdMultiplier = 0.18;
 
+      function getClip(length, startTime, data) {
+        var clip_length = length * 44100;
+        var section = startTime * 44100;
+        var newArr = [];
 
+        for (var i = 0; i < clip_length; i++) {
+          newArr.push(data[section + i]);
+        }
 
-            function getClip(length, startTime, data) {
-                var clip_length = length * 44100;
-                var section = startTime * 44100;
-                var newArr = [];
+        return newArr;
+      }
 
-                for (var i = 0; i < clip_length; i++) {
-                    newArr.push(data[section + i]);
-                }
+      function countFlatLineGroupings(data) {
+        var groupings = 0;
+        var newArray = normalizeArray(data);
 
-                return newArr;
+        function getMax(a) {
+          var m = -Infinity,
+            i = 0,
+            n = a.length;
+
+          for (; i != n; ++i) {
+            if (a[i] > m) {
+              m = a[i];
             }
+          }
 
-            function countFlatLineGroupings(data) {
-                var groupings = 0;
-                var newArray = normalizeArray(data);
+          return m;
+        }
 
-                function getMax(a) {
-                    var m = -Infinity,
-                        i = 0,
-                        n = a.length;
+        function getMin(a) {
+          var m = Infinity,
+            i = 0,
+            n = a.length;
 
-                    for (; i != n; ++i) {
-                        if (a[i] > m) {
-                            m = a[i];
-                        }
-                    }
-
-                    return m;
-                }
-
-                function getMin(a) {
-                    var m = Infinity,
-                        i = 0,
-                        n = a.length;
-
-                    for (; i != n; ++i) {
-                        if (a[i] < m) {
-                            m = a[i];
-                        }
-                    }
-
-                    return m;
-                }
-
-                var max = getMax(newArray);
-                var min = getMin(newArray);
-                var count = 0;
-                var threshold = Math.round((max - min) * thresholdMultiplier);
-
-                for (var i = 0; i < newArray.length; i++) {
-                    if (newArray[i] > threshold && newArray[i + 1] < threshold && newArray[i + 2] < threshold && newArray[i + 3] < threshold && newArray[i + 6] < threshold) {
-                        count++;
-                    }
-                }
-
-                return count;
+          for (; i != n; ++i) {
+            if (a[i] < m) {
+              m = a[i];
             }
+          }
 
-            function normalizeArray(data) {
-                var newArray = [];
+          return m;
+        }
 
-                for (var i = 0; i < data.length; i++) {
-                    newArray.push(Math.abs(Math.round((data[i + 1] - data[i]) * 1000)));
-                }
+        var max = getMax(newArray);
+        var min = getMin(newArray);
+        var count = 0;
+        var threshold = Math.round((max - min) * thresholdMultiplier);
 
-                return newArray;
-            }
+        for (var i = 0; i < newArray.length; i++) {
+          if (
+            newArray[i] > threshold &&
+            newArray[i + 1] < threshold &&
+            newArray[i + 2] < threshold &&
+            newArray[i + 3] < threshold &&
+            newArray[i + 6] < threshold
+          ) {
+            count++;
+          }
+        }
 
-            function getSampleClip(data, samples) {
-                var newArray = [];
-                var modulus_coefficient = Math.round(data.length / samples);
+        return count;
+      }
 
-                for (var i = 0; i < data.length; i++) {
-                    if (i % modulus_coefficient == 0) {
-                        newArray.push(data[i]);
-                    }
-                }
+      function normalizeArray(data) {
+        var newArray = [];
 
-                return newArray;
-            }
+        for (var i = 0; i < data.length; i++) {
+          newArray.push(Math.abs(Math.round((data[i + 1] - data[i]) * 1000)));
+        }
 
-            function createBuffers(url) {
-                // Fetch Audio Track via AJAX with URL
-                request = new XMLHttpRequest();
+        return newArray;
+      }
 
-                request.open('GET', url, true);
-                request.responseType = 'arraybuffer';
+      function getSampleClip(data, samples) {
+        var newArray = [];
+        var modulus_coefficient = Math.round(data.length / samples);
 
-                request.onload = function(ajaxResponseBuffer) {
-                    // Create and Save Original Buffer Audio Context in 'originalBuffer'
-                    var audioCtx = new AudioContext();
-                    var songLength = ajaxResponseBuffer.total;
+        for (var i = 0; i < data.length; i++) {
+          if (i % modulus_coefficient == 0) {
+            newArray.push(data[i]);
+          }
+        }
 
-                    console.log(songLength);
+        return newArray;
+      }
 
-                    // Arguments: Channels, Length, Sample Rate
-                    var offlineCtx = new OfflineAudioContext(1, songLength, 44100);
-                    source = offlineCtx.createBufferSource();
-                    var audioData = request.response;
-                    audioCtx.decodeAudioData(audioData, function(buffer) {
-                            window.originalBuffer = buffer.getChannelData(0);
-                            var source = offlineCtx.createBufferSource();
-                            source.buffer = buffer;
+      function createBuffers(url) {
+        // Fetch Audio Track via AJAX with URL
+        request = new XMLHttpRequest();
 
-                            // Create a Low Pass Filter to Isolate Low End Beat
-                            var filter = offlineCtx.createBiquadFilter();
-                            filter.type = "lowpass";
-                            filter.frequency.value = frenquencyCutoff;
-                            source.connect(filter);
-                            filter.connect(offlineCtx.destination);
+        request.open("GET", url, true);
+        request.responseType = "arraybuffer";
 
-                            // Schedule start at time 0
-                            source.start(0);
+        request.onload = function(ajaxResponseBuffer) {
+          // Create and Save Original Buffer Audio Context in 'originalBuffer'
+          var audioCtx = new AudioContext();
+          var songLength = ajaxResponseBuffer.total;
 
-                            // Render this low pass filter data to new Audio Context and Save in 'lowPassBuffer'
-                            offlineCtx.startRendering().then(function(lowPassAudioBuffer) {
-                                var audioCtx = new(window.AudioContext || window.webkitAudioContext)();
-                                var song = audioCtx.createBufferSource();
-                                song.buffer = lowPassAudioBuffer;
-                                song.connect(audioCtx.destination);
+          console.log(songLength);
 
-                                // Save lowPassBuffer in Global Array
-                                window.lowPassBuffer = song.buffer.getChannelData(0);
+          // Arguments: Channels, Length, Sample Rate
+          var offlineCtx = new OfflineAudioContext(1, songLength, 44100);
+          source = offlineCtx.createBufferSource();
+          var audioData = request.response;
+          audioCtx.decodeAudioData(
+            audioData,
+            function(buffer) {
+              window.originalBuffer = buffer.getChannelData(0);
+              var source = offlineCtx.createBufferSource();
+              source.buffer = buffer;
 
-                                console.log("Low Pass Buffer Rendered!");
+              // Create a Low Pass Filter to Isolate Low End Beat
+              var filter = offlineCtx.createBiquadFilter();
+              filter.type = "lowpass";
+              filter.frequency.value = frenquencyCutoff;
+              source.connect(filter);
+              filter.connect(offlineCtx.destination);
 
-                                //length, start time, data
-                                window.lowPassFilter = getClip(10, clipStart, window.lowPassBuffer);
-                                //data, sample
-                                window.lowPassBuffer = getSampleClip(window.lowPassFilter, 300);
-                                //data
-                                window.lowPassBuffer = normalizeArray(window.lowPassBuffer);
+              // Schedule start at time 0
+              source.start(0);
 
-                                var final_tempo = countFlatLineGroupings(window.lowPassBuffer);
-                                final_tempo = final_tempo * 6;
-                                console.log("Tempo: " + final_tempo);
-                                $(".tempo .bpm").text(final_tempo + " BPM");
-                                $(".tempo .artist").text(artist);
-                                $(".tempo .song").text(songName);
-                                $(".loading").hide();
-                                $(".tempo").show();
-                            });
+              // Render this low pass filter data to new Audio Context and Save in 'lowPassBuffer'
+              offlineCtx.startRendering().then(function(lowPassAudioBuffer) {
+                var audioCtx = new (window.AudioContext ||
+                  window.webkitAudioContext)();
+                var song = audioCtx.createBufferSource();
+                song.buffer = lowPassAudioBuffer;
+                song.connect(audioCtx.destination);
 
-                        },
-                        function(e) {});
-                }
-                request.send();
-            }
+                // Save lowPassBuffer in Global Array
+                window.lowPassBuffer = song.buffer.getChannelData(0);
 
-            createBuffers(songUrl);
-        </script>
-    </body>
+                console.log("Low Pass Buffer Rendered!");
+
+                //length, start time, data
+                window.lowPassFilter = getClip(
+                  10,
+                  clipStart,
+                  window.lowPassBuffer
+                );
+                //data, sample
+                window.lowPassBuffer = getSampleClip(window.lowPassFilter, 300);
+                //data
+                window.lowPassBuffer = normalizeArray(window.lowPassBuffer);
+
+                var final_tempo = countFlatLineGroupings(window.lowPassBuffer);
+                final_tempo = final_tempo * 6;
+                console.log("Tempo: " + final_tempo);
+                $(".tempo .bpm").text(final_tempo + " BPM");
+                $(".tempo .artist").text(artist);
+                $(".tempo .song").text(songName);
+                $(".loading").hide();
+                $(".tempo").show();
+              });
+            },
+            function(e) {}
+          );
+        };
+        request.send();
+      }
+
+      createBuffers(songUrl);
+    </script>
+  </body>
 </html>
