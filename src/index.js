@@ -34,8 +34,8 @@ router.post("/", function(req, res) {
 
     (async () => {
       const browser = await puppeteer.launch({
-        executablePath:
-          "./node_modules/puppeteer/.local-chromium/win64-609904/chrome-win/chrome.exe",
+        // executablePath:
+        //   "../node_modules/puppeteer/.local-chromium/win64-609904/chrome-win/chrome.exe",
         headless: true,
         args: ["--no-sandbox", "--disable-setuid-sandbox"]
       });
