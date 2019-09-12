@@ -14,7 +14,7 @@ app.use(
 app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, "public")));
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, ".."));
 app.engine("html", require("ejs").renderFile);
 app.set("view engine", "html");
 
